@@ -1,0 +1,32 @@
+# ============================================================================
+# docker-compose.yml
+# Levanta todo el proyecto con: docker-compose up --build
+#
+# Servicios:
+#   - server: Express + Socket.io en puerto 3001
+#   - client: React (nginx) en puerto 8080
+# ============================================================================
+
+version: "3.8"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - FIREBASE_PROJECT_ID=jigsauth-demo
+    restart: unless-stopped
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+    restart: unless-stopped
